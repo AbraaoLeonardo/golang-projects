@@ -8,7 +8,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // Create a object book
@@ -44,6 +45,7 @@ func MainRoute(w http.ResponseWriter, r *http.Request) {
 
 // Create book
 func AddNewBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(201)
 
 	body, erro := ioutil.ReadAll(r.Body)
@@ -62,7 +64,7 @@ func AddNewBook(w http.ResponseWriter, r *http.Request) {
 
 // Read all item
 func ShowBooks(w http.ResponseWriter, r *http.Request) {
-
+	w.Header().Set("content-type", "application/json")
 	encoder := json.NewEncoder(w)
 	encoder.Encode(Books)
 
@@ -70,8 +72,9 @@ func ShowBooks(w http.ResponseWriter, r *http.Request) {
 
 // Read 1 item
 func SearchBook(w http.ResponseWriter, r *http.Request) {
-	SplitedPath := strings.Split(r.URL.Path, "/")
-	id, _ := strconv.Atoi(SplitedPath[2])
+	w.Header().Set("content-type", "application/json")
+	SplitedPath := mux.Vars(r)
+	id, _ := strconv.Atoi(SplitedPath["ID"])
 
 	for _, book := range Books {
 		if book.Id == id {
@@ -85,9 +88,9 @@ func SearchBook(w http.ResponseWriter, r *http.Request) {
 
 // Update book
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
-
-	SplitedPath := strings.Split(r.URL.Path, "/")
-	id, erro := strconv.Atoi(SplitedPath[2])
+	w.Header().Set("content-type", "application/json")
+	SplitedPath := mux.Vars(r)
+	id, erro := strconv.Atoi(SplitedPath["ID"])
 
 	if erro != nil {
 		w.WriteHeader(404)
@@ -128,9 +131,9 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 
 // Delete book
 func RemoveBook(w http.ResponseWriter, r *http.Request) {
-
-	SplitedPath := strings.Split(r.URL.Path, "/")
-	id, erro := strconv.Atoi(SplitedPath[2])
+	w.Header().Set("content-type", "application/json")
+	SplitedPath := mux.Vars(r)
+	id, erro := strconv.Atoi(SplitedPath["ID"])
 
 	if erro != nil {
 		w.WriteHeader(404)
@@ -156,46 +159,20 @@ func RemoveBook(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func RouteBook(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
-
-	SplitedPath := strings.Split(r.URL.Path, "/")
-
-	if len(SplitedPath) == 2 || SplitedPath[2] == "" {
-
-		if r.Method == "GET" {
-			ShowBooks(w, r)
-		} else if r.Method == "POST" {
-			AddNewBook(w, r)
-		}
-
-	} else if len(SplitedPath) == 3 {
-
-		if r.Method == "GET" {
-			SearchBook(w, r)
-		} else if r.Method == "DELETE" {
-			RemoveBook(w, r)
-		} else if r.Method == "PUT" {
-			UpdateBook(w, r)
-		}
-
-	} else {
-
-		w.WriteHeader(404)
-
-	}
-}
-
-func RouteConfigure() {
-	http.HandleFunc("/", MainRoute)
-	http.HandleFunc("/books", RouteBook)
-	http.HandleFunc("/books/", RouteBook)
+func RouteConfigure(route *mux.Router) {
+	route.HandleFunc("/", MainRoute)
+	route.HandleFunc("/books", ShowBooks).Methods("GET")
+	route.HandleFunc("/books", AddNewBook).Methods("POST")
+	route.HandleFunc("/books/{ID}", SearchBook).Methods("GET")
+	route.HandleFunc("/books/{ID}", RemoveBook).Methods("DELETE")
+	route.HandleFunc("/books/{ID}", UpdateBook).Methods("PUT")
 }
 
 func ServerConfigure() {
-	RouteConfigure()
+	route := mux.NewRouter().StrictSlash(true)
+	RouteConfigure(route)
 	fmt.Println("Server running in the port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", route))
 }
 
 func main() {

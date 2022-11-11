@@ -18,6 +18,10 @@ a miniserver with 3 pages
 
 CRUD API
 
+## Projeto 3
+
+CRUD API with gorilla mux
+
 # Lista de projetos desenvolvidos durante o estudo da linguagem GO
 
 ## Conteudo utilizado como base
@@ -37,3 +41,7 @@ Um server com 3 paginas
 ## Projeto 2
 
 CRUD API
+
+## Projeto 3
+
+CRUD API com gorilla mux
