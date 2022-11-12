@@ -38,7 +38,7 @@ a miniserver with 3 pages
 
 - main page
 - form
-- hell
+- hello
 
 ## CRUD
 
@@ -53,7 +53,7 @@ The rest crud, but with the help of gorilla/mux, a package to help the developme
 A rest api, who can make the crud(Create, Read, Update, Delete), in a database
 
 Before running the project, you will needed to add your db credential
-<img src="./imgs/db.png">
+<img src="./imgs/mysql/db.png">
 
 Now, past the follow command in your terminal
 
@@ -72,7 +72,15 @@ Run the server, and get the data from the database
 `go run main.go` para rodar o programa.
 
 If the code run without no problem, you will see the message in your terminal
-<img src="./imgs/server.png">
+<img src="./imgs/mysql/server.png">
+
+## BookStorage
+
+Crud api, but with organization
+
+### How to run?
+
+In the folder, use the command `go run ./cmd/main/main.go`
 
 # [PT-BR]
 
@@ -114,7 +122,7 @@ Um server com 3 paginas
 
 - main page
 - form
-- hell
+- hello
 
 ## REST API
 
@@ -129,7 +137,7 @@ código refatorado utilizando o gorilla mux
 CRUD REST API com mysql db
 
 Dentro de db/database.go e do main.go, você precisará colocar as credenciais do seu banco de dados.
-<img src="./imgs/db.png">
+<img src="./imgs/mysql/db.png">
 
 Para isso, utilize o seu editor de texto preferido. Notepad++, Visual Studio Code, Word, Vim, Nano
 
@@ -146,4 +154,12 @@ Após isso, cole os seguintes comandos no terminal.
 - `go run main.go` para rodar o programa.
 
 No terminal, receberemos a mensagem de sucesso
-<img src="./imgs/server.png">
+<img src="./imgs/mysql/server.png">
+
+## BookStorage
+
+Crud api, porem, organizado por pastas e arquivos
+
+### Como rodar a aplicação?
+
+Na pasta, Utilize o comando `go run ./cmd/main/main.go`
