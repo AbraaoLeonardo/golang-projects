@@ -4,7 +4,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -48,7 +48,7 @@ func AddNewBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(201)
 
-	body, erro := ioutil.ReadAll(r.Body)
+	body, erro := io.ReadAll(r.Body)
 	if erro != nil {
 		fmt.Fprintf(w, "Error: %v", erro)
 	}
@@ -97,7 +97,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, erroBody := ioutil.ReadAll(r.Body)
+	body, erroBody := io.ReadAll(r.Body)
 
 	if erroBody != nil {
 		w.WriteHeader(500)
